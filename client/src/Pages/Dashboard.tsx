@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useAppContext } from "../Context/AppContext";
 import { getMotivationalMessage } from "../assets/assets";
 import type { ActivityEntry, FoodEntry } from "../types";
@@ -279,49 +279,56 @@ const Dashboard = () => {
           </Card>
 
           {/* Body Metrics card */}
-          <Card>
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                <ScaleIcon className="w-5 h-5 text-purple-500" />
-              </div>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Body Metrics
-              </p>
-            </div>
+         <Card>
+  <div className="flex items-center gap-3 mb-4">
+    <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+      <ScaleIcon className="w-5 h-5 text-purple-500" />
+    </div>
+    <p className="text-sm text-slate-500 dark:text-slate-400">
+      Body Metrics
+    </p>
+  </div>
 
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <p className="text-slate-600 dark:text-slate-300">Weight</p>
-                <p className="font-semibold text-slate-800 dark:text-white">
-                  {weight ?? "--"} kg
-                </p>
-              </div>
+  <div className="space-y-3">
+    <div className="flex justify-between items-center">
+      <p className="text-slate-600 dark:text-slate-300">Age</p>
+      <p className="font-semibold text-slate-800 dark:text-white">
+        {age ?? "--"} yrs
+      </p>
+    </div>
 
-              <div className="flex justify-between items-center">
-                <p className="text-slate-600 dark:text-slate-300">Height</p>
-                <p className="font-semibold text-slate-800 dark:text-white">
-                  {height ?? "--"} cm
-                </p>
-              </div>
+    <div className="flex justify-between items-center">
+      <p className="text-slate-600 dark:text-slate-300">Weight</p>
+      <p className="font-semibold text-slate-800 dark:text-white">
+        {weight ?? "--"} kg
+      </p>
+    </div>
 
-              <div className="flex justify-between items-center">
-                <p className="text-slate-600 dark:text-slate-300">BMI</p>
-                <p className="font-semibold text-emerald-500">{bmi ?? "--"}</p>
-              </div>
+    <div className="flex justify-between items-center">
+      <p className="text-slate-600 dark:text-slate-300">Height</p>
+      <p className="font-semibold text-slate-800 dark:text-white">
+        {height ?? "--"} cm
+      </p>
+    </div>
 
-              <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 mt-2 relative">
-                <div
-                  className="h-2 rounded-full bg-gradient-to-r from-blue-400 via-emerald-400 to-orange-400"
-                  style={{ width: "60%" }}
-                />
-                <div className="flex justify-between text-xs text-slate-400 mt-1">
-                  <span>18.5</span>
-                  <span>25</span>
-                  <span>30</span>
-                </div>
-              </div>
-            </div>
-          </Card>
+    <div className="flex justify-between items-center">
+      <p className="text-slate-600 dark:text-slate-300">BMI</p>
+      <p className="font-semibold text-emerald-500">{bmi ?? "--"}</p>
+    </div>
+
+    <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 mt-2 relative">
+      <div
+        className="h-2 rounded-full bg-gradient-to-r from-blue-400 via-emerald-400 to-orange-400"
+        style={{ width: "60%" }}
+      />
+      <div className="flex justify-between text-xs text-slate-400 mt-1">
+        <span>18.5</span>
+        <span>25</span>
+        <span>30</span>
+      </div>
+    </div>
+  </div>
+</Card>
 
           {/* Today's Summary */}
           <Card className="shadow-lg">
