@@ -29,14 +29,22 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return !!(age && weight && goal);
 };
 
+
+
   const signup = async (credentials: Credentials) => {
   try {
-    // ✅ clear old state BEFORE switching user
+    localStorage.removeItem("token");
+    delete api.defaults.headers.common["Authorization"];
+
     setAllFoodLogs([]);
     setAllActivityLogs([]);
     setUser(null);
 
-    const { data } = await api.post("/api/auth/local/register", credentials);
+    const { data } = await api.post("/api/auth/local/register", {
+      username: credentials.username,
+      email: credentials.email,
+      password: credentials.password,
+    });
 
     const token = data.jwt;
 
@@ -47,12 +55,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setOnboardingCompleted(hasCompletedOnboarding(data?.user));
     setIsUserFetched(true);
 
-    // ✅ fetch new user's logs immediately
     await fetchFoodLogs(token);
     await fetchActivityLogs(token);
-
   } catch (error: any) {
-    console.log(error);
+    console.log(error?.response?.data || error);
     toast.error(error?.response?.data?.error?.message || error?.message);
     setIsUserFetched(true);
   }
@@ -61,7 +67,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (credentials: Credentials) => {
   try {
-    // ✅ clear old user's logs first
+    localStorage.removeItem("token");
+    delete api.defaults.headers.common["Authorization"];
+
     setAllFoodLogs([]);
     setAllActivityLogs([]);
     setUser(null);
@@ -80,12 +88,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     setOnboardingCompleted(hasCompletedOnboarding(data?.user));
     setIsUserFetched(true);
 
-    // ✅ fetch logs for THIS user
     await fetchFoodLogs(token);
     await fetchActivityLogs(token);
-
   } catch (error: any) {
-    console.log(error);
+    console.log(error?.response?.data || error);
     toast.error(error?.response?.data?.error?.message || error?.message);
     setIsUserFetched(true);
   }
@@ -114,30 +120,44 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   };
 
-const fetchFoodLogs = async (token : string) => {
+const fetchFoodLogs = async (token: string) => {
   try {
-    const {data} = await api.get('/api/foodlogs',{headers: {Authorization : `Bearer ${token}`}})
+    const res = await api.get("/api/foodlogs", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    setAllFoodLogs(data)
-    
-  } catch (error:any) {
-      console.log(error);
-      toast.error(error?.response?.data?.error?.message || error?.message )
+    const payload = res.data;
+
+    // ✅ works for BOTH:
+    // 1) payload = []  (your custom controller returning array)
+    // 2) payload = { data: [] } (default Strapi REST shape)
+    const items = Array.isArray(payload) ? payload : (payload?.data ?? []);
+
+    setAllFoodLogs(items);
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.error?.message || error?.message);
+  }
+};
+
+const fetchActivityLogs = async (token: string) => {
+  try {
+    const res = await api.get("/api/activitylogs", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const payload = res.data;
+    const items = Array.isArray(payload) ? payload : (payload?.data ?? []);
+
+    setAllActivityLogs(items);
+  } catch (error: any) {
+    console.log(error);
+    toast.error(error?.response?.data?.error?.message || error?.message);
   }
 };
 
 
-const fetchActivityLogs = async (token : string) => {
-  try {
-    const {data} = await api.get('/api/activitylogs',{headers: {Authorization : `Bearer ${token}`}})
 
-    setAllActivityLogs(data)
-    
-  } catch (error:any) {
-      console.log(error);
-      toast.error(error?.response?.data?.error?.message || error?.message )
-  }
-};
 
 
 useEffect(()=> {
