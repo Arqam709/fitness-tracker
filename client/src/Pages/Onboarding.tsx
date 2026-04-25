@@ -1,9 +1,8 @@
 import { ArrowLeft, ArrowRight, PersonStandingIcon, ScaleIcon, TargetIcon, User } from "lucide-react";
 import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../Context/AppContext";
-import type { ProfileFormData , UserData} from "../types";
+import type { ProfileFormData} from "../types";
 import Input from "../Components/ui/Input";
 import Button from "../Components/ui/Button";
 import Slider from "../Components/ui/Slider";
@@ -13,7 +12,7 @@ import api from "../configs/api";
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const navigate = useNavigate();
+ 
   const { user, setOnboardingCompleted, fetchUser } = useAppContext();
   
   const [formData, setFormData] = useState<ProfileFormData>({
